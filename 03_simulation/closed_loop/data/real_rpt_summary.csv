@@ -1,0 +1,3 @@
+checkpoint,cycle,capacity_01c_ah,dcir_ohm,dcir_100_soc_ohm,dcir_80_soc_ohm,dcir_50_soc_ohm,dcir_20_soc_ohm,hppc_power_w,lli_pct,lam_ne_pct,lam_pe_pct,soh_pct
+0,0,3.0,0.015,0.015,0.015,0.015,0.015,30.0,0.0,0.0,0.0,100.0
+1,50,2.85,0.018,0.018,0.018,0.018,0.018,28.0,3.0,2.0,1.0,95.0

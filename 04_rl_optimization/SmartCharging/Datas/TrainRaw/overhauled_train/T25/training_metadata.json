@@ -1,0 +1,63 @@
+{
+  "algorithm": "PPO",
+  "temperature": 25,
+  "num_cpu": 16,
+  "total_timesteps": 32768,
+  "tb_log_name": "PPO",
+  "tensorboard_log": "saved_datas/overhauled_train/T25/tensorboard",
+  "solver_type": "IDAKLU",
+  "ppo_hyperparameters": {
+    "learning_rate": 0.0003,
+    "n_steps": 16,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "normalize_advantage": true,
+    "ent_coef": 0.0,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "use_sde": false,
+    "sde_sample_freq": -1,
+    "target_kl": null,
+    "stats_window_size": 100,
+    "device": "auto"
+  },
+  "resolved_learning_rate": {
+    "mode": "cosine_decay",
+    "initial_value": 0.0003,
+    "final_value": 2.9999999999999997e-05,
+    "final_ratio": 0.1
+  },
+  "resumed_from": "saved_datas/overhauled_train/T25/ppo_battery_aging_model_T25.zip",
+  "reward_config": {
+    "w_soh_weight": 0.4,
+    "w_time_weight": 0.4,
+    "w_soh_val_weight": 0.2
+  },
+  "para_dict": {
+    "Ageing temperature": 25,
+    "Mesh list": "[10,5,5,100,20]",
+    "Inner SEI lithium interstitial diffusivity [m2.s-1]": 3.561225611452271e-18,
+    "Dead lithium decay constant [s-1]": 8.729713197799017e-07,
+    "Lithium plating kinetic rate constant [m.s-1]": 6.575088868752069e-09,
+    "Negative electrode LAM constant proportional term [s-1]": 3.197067135549928e-09,
+    "Positive electrode LAM constant proportional term [s-1]": 8.455514423222935e-18,
+    "Negative electrode cracking rate": 6.492694506316994e-25,
+    "Outer SEI partial molar volume [m3.mol-1]": 4.9597319270573446e-05,
+    "SEI growth activation energy [J.mol-1]": 9940.671239865043,
+    "Negative cracking growth activation energy [J.mol-1]": 0.0,
+    "Negative electrode diffusivity activation energy [J.mol-1]": 10000.0,
+    "Positive electrode diffusivity activation energy [J.mol-1]": 14515.476193286979,
+    "Initial electrolyte excessive amount ratio": 1.0,
+    "Cycles within RPT": 1,
+    "RPT temperature": 25,
+    "Total ageing cycles": 256,
+    "Ageing cycles between RPT": 1,
+    "Update cycles for ageing": 1,
+    "Para_Set": "OKane2023",
+    "Model option": "{'SEI': 'interstitial-diffusion limited', 'SEI on cracks': 'true', 'lithium plating': 'partially reversible', 'lithium plating porosity change': 'true', 'particle mechanics': ('swelling and cracking', 'swelling only'), 'loss of active material': 'stress-driven', 'contact resistance': 'true', 'open-circuit potential': 'current sigmoid', 'SEI film resistance': 'distributed', 'SEI porosity change': 'true', 'thermal': 'lumped'}"
+  }
+}

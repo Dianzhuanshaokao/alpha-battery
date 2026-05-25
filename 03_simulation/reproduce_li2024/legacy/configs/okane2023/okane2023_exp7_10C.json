@@ -1,0 +1,16 @@
+{
+  "Scan No": 1,
+  "Exp No.": 7,
+  "Ageing temperature": 10,
+  "Para_Set": "OKane2023",
+  "Model option": "{'SEI': 'solvent-diffusion limited', 'SEI film resistance': 'distributed', 'SEI porosity change': 'true', 'lithium plating': 'partially reversible', 'lithium plating porosity change': 'true', 'particle mechanics': 'swelling and cracking', 'SEI on cracks': 'true', 'loss of active material': 'stress-driven', 'thermal': 'x-lumped', 'calculate discharge energy': 'true'}",
+  "Mesh list": "[5, 5, 5, 60, 20]",
+  "Exponential mesh stretch": 1.15,
+  "Cycles within RPT": 1,
+  "RPT temperature": 10,
+  "Current solvent concentration in the reservoir [mol.m-3]": 4541.0,
+  "Current electrolyte concentration in the reservoir [mol.m-3]": 1000.0,
+  "Ratio of Li-ion concentration change in electrolyte consider solvent consumption": 1.0,
+  "EC initial concentration in electrolyte [mol.m-3]": 4541.0,
+  "Typical EC concentration in electrolyte [mol.m-3]": 4541.0
+}

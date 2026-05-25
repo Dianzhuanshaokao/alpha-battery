@@ -1,0 +1,9 @@
+checkpoint,trace_role,time_s,current_a,voltage_v,capacity_ah
+0,discharge,0,-0.3,4.2,0.0
+0,discharge,10,-0.3,4.0,1.0
+0,discharge,20,-0.3,3.8,2.0
+0,discharge,30,-0.3,3.5,3.0
+1,discharge,0,-0.3,4.15,0.0
+1,discharge,10,-0.3,3.95,0.95
+1,discharge,20,-0.3,3.75,1.90
+1,discharge,30,-0.3,3.45,2.85

@@ -1,0 +1,69 @@
+# Battery Environment Configuration
+# PyBaMM Simulation Parameters
+para_dict:
+  # Aging temperature
+  Ageing temperature: 10
+  
+  # Mesh settings
+  Mesh list: "[10,5,5,100,20]"
+  
+  # SEI and degradation parameters
+  Inner SEI lithium interstitial diffusivity [m2.s-1]: 3.0815260431063136e-18
+  Dead lithium decay constant [s-1]: 2.733063283967037e-07
+  Lithium plating kinetic rate constant [m.s-1]: 2.4797464057913834e-09
+  Negative electrode LAM constant proportional term [s-1]: 5.1118733462225266e-09
+  Positive electrode LAM constant proportional term [s-1]: 4.721568051435075e-18
+  Negative electrode cracking rate: 6.561652567301391e-25
+  Outer SEI partial molar volume [m3.mol-1]: 2.210538607884988e-05
+  SEI growth activation energy [J.mol-1]: 6433.650014534862
+  Negative cracking growth activation energy [J.mol-1]: 4745.2904786582985
+  Negative electrode diffusivity activation energy [J.mol-1]: 10885.786053973772
+  Positive electrode diffusivity activation energy [J.mol-1]: 11441.68811095503
+  
+  # Electrolyte settings
+  Initial electrolyte excessive amount ratio: 1.0
+  
+  # Cycle settings
+  Cycles within RPT: 1
+  RPT temperature: 25
+  Total ageing cycles: 256
+  Ageing cycles between RPT: 1
+  Update cycles for ageing: 1
+  
+  # Model configuration
+  Para_Set: "OKane2023"
+  Model option: "{'SEI': 'interstitial-diffusion limited', 'SEI on cracks': 'true', 'lithium plating': 'partially reversible', 'lithium plating porosity change': 'true', 'particle mechanics': ('swelling and cracking', 'swelling only'), 'loss of active material': 'stress-driven', 'contact resistance': 'true', 'open-circuit potential': 'current sigmoid', 'SEI film resistance': 'distributed', 'SEI porosity change': 'true', 'thermal': 'lumped'}"
+
+# Reward configuration
+# 使用 Sigmoid 组合奖励：r_total = w_soh_weight * r_soh + w_time_weight * r_time
+reward:
+  # Combined priority weights
+  w_soh_weight: 0.4
+  w_time_weight: 0.4
+  w_soh_val_weight: 0.2
+
+# Training runtime configuration
+total_timesteps: 32768 # 16*16*64 * 2
+
+# PPO hyperparameters loaded by train_ppo.py
+# policy is fixed to MlpPolicy and verbose is fixed to 1 in code.
+ppo:
+  # Base learning rate. train_ppo.py automatically applies smooth decay over training.
+  learning_rate: 0.0003
+  n_steps: 16
+  batch_size: 512
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  clip_range_vf:
+  normalize_advantage: true
+  ent_coef: 0.0
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  use_sde: false
+  sde_sample_freq: -1
+  target_kl:
+  stats_window_size: 100
+  device: "auto"
+#

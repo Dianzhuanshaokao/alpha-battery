@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "capacity_01c_ah": 1.0,
+    "dcir_ohm": 1.0,
+    "dcir_100_soc_ohm": 0.8,
+    "dcir_80_soc_ohm": 0.8,
+    "dcir_50_soc_ohm": 0.8,
+    "dcir_20_soc_ohm": 0.8,
+    "hppc_power_w": 0.5,
+    "soh_pct": 0.8,
+    "lli_pct": 0.7,
+    "lam_ne_pct": 0.6,
+    "lam_pe_pct": 0.6
+  },
+  "curve": {
+    "ica_rmse": 0.3,
+    "dqdv_rmse": 0.3,
+    "ica_peak_voltage_error": 0.2,
+    "ica_peak_height_error": 0.1,
+    "ica_area_rel_error": 0.1
+  }
+}

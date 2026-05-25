@@ -1,0 +1,10 @@
+{
+  "sei_diffusion_coeff": 1e-17,
+  "sei_activation_energy": 28000.0,
+  "electrolyte_consumption_rate": 1e-08,
+  "plating_rate_constant": 1e-08,
+  "lam_decay_neg": 1e-08,
+  "lam_decay_pos": 2.5e-06,
+  "crack_critical_stress": 98065258.46939428,
+  "crack_sensitivity": 2e-08
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "sei_solvent_diffusivity",
+    "kind": "parameter",
+    "targets": ["Outer SEI solvent diffusivity [m2.s-1]"],
+    "transform": "log10",
+    "bounds": [-24.0, -18.0]
+  },
+  {
+    "name": "plating_rate_constant",
+    "kind": "parameter",
+    "targets": ["Lithium plating kinetic rate constant [m.s-1]"],
+    "transform": "log10",
+    "bounds": [-12.0, -7.0]
+  },
+  {
+    "name": "negative_lam_rate",
+    "kind": "parameter",
+    "targets": ["Negative electrode LAM constant proportional term [s-1]"],
+    "transform": "log10",
+    "bounds": [-14.0, -8.0]
+  },
+  {
+    "name": "negative_critical_stress",
+    "kind": "parameter",
+    "targets": ["Negative electrode critical stress [Pa]"],
+    "transform": "log10",
+    "bounds": [6.0, 9.0]
+  }
+]

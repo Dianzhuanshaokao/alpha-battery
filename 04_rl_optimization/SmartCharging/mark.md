@@ -1,0 +1,1 @@
+所有脚本以及数据在slurm集群"/home/yanli/xuanyanma/"都有备份

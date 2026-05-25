@@ -1,0 +1,349 @@
+{
+  "case_name": "okane2023_full_cycle",
+  "model": {
+    "type": "DFN",
+    "parameter_set": "OKane2023",
+    "options": {
+      "SEI": "interstitial-diffusion limited",
+      "SEI on cracks": "true",
+      "lithium plating": "partially reversible",
+      "lithium plating porosity change": "true",
+      "particle mechanics": [
+        "swelling and cracking",
+        "swelling only"
+      ],
+      "loss of active material": "stress-driven",
+      "contact resistance": "true",
+      "open-circuit potential": "current sigmoid",
+      "SEI film resistance": "distributed",
+      "SEI porosity change": "true",
+      "thermal": "isothermal"
+    }
+  },
+  "parameter_updates": {
+    "Ambient temperature [K]": 298.15,
+    "Initial temperature [K]": 298.15,
+    "Nominal cell capacity [A.h]": 5.0
+  },
+  "degradation_parameter_updates": {
+    "sei": {
+      "Ratio of lithium moles to SEI moles": 2.0,
+      "Inner SEI reaction proportion": 0.5,
+      "Inner SEI partial molar volume [m3.mol-1]": 5.22e-05,
+      "Outer SEI partial molar volume [m3.mol-1]": 5.22e-05,
+      "SEI reaction exchange current density [A.m-2]": 1.5e-07,
+      "SEI resistivity [Ohm.m]": 200000.0,
+      "Outer SEI solvent diffusivity [m2.s-1]": 2.5e-22,
+      "Inner SEI open-circuit potential [V]": 0.1,
+      "Outer SEI open-circuit potential [V]": 0.8,
+      "Inner SEI electron conductivity [S.m-1]": 8.95e-14,
+      "Inner SEI lithium interstitial diffusivity [m2.s-1]": 9.81e-19,
+      "Initial inner SEI thickness [m]": 1.23625e-08,
+      "Initial outer SEI thickness [m]": 1.23625e-08,
+      "Initial SEI thickness [m]": 2.4725e-08,
+      "SEI kinetic rate constant [m.s-1]": 1e-12,
+      "SEI open-circuit potential [V]": 0.4,
+      "SEI growth activation energy [J.mol-1]": 5000.0
+    },
+    "plating": {
+      "Lithium plating kinetic rate constant [m.s-1]": 1e-10,
+      "Lithium plating transfer coefficient": 0.65,
+      "Dead lithium decay constant [s-1]": 1e-07
+    },
+    "lam": {
+      "Negative electrode porosity": 0.2223931640762495,
+      "Negative electrode active material volume fraction": 0.75,
+      "Negative electrode LAM constant proportional term [s-1]": 2.84e-09,
+      "Positive electrode porosity": 0.335,
+      "Positive electrode active material volume fraction": 0.665,
+      "Positive electrode LAM constant proportional term [s-1]": 2.98e-18
+    },
+    "cracking": {
+      "Negative cracking growth activation energy [J.mol-1]": 0.0,
+      "Negative electrode cracking rate factor [m.(Pa.m0.5)-m_cr]": 5.29e-25,
+      "Negative electrode initial crack length [m]": 2e-08,
+      "Negative electrode initial crack width [m]": 1.5e-08,
+      "Negative electrode number of cracks per unit area [m-2]": 3180000000000000.0,
+      "Positive electrode initial crack length [m]": 2e-08,
+      "Positive electrode initial crack width [m]": 1.5e-08,
+      "Positive electrode number of cracks per unit area [m-2]": 3180000000000000.0,
+      "Negative electrode diffusivity activation energy [J.mol-1]": 20000.0
+    },
+    "dryout": {
+      "Initial electrolyte excessive amount ratio": 1.0,
+      "Current total electrolyte volume in whole cell [m3]": 5.126157281393747e-06,
+      "Current total electrolyte volume in jelly roll [m3]": 5.126157281393747e-06,
+      "Ratio of electrolyte dry out in jelly roll": 1.0,
+      "Current solvent concentration in the reservoir [mol.m-3]": 4541.0,
+      "Current electrolyte concentration in the reservoir [mol.m-3]": 1000.0,
+      "Bulk solvent concentration [mol.m-3]": 4541.0,
+      "EC initial concentration in electrolyte [mol.m-3]": 4541.0,
+      "Typical EC concentration in electrolyte [mol.m-3]": 4541.0,
+      "Ratio of Li-ion concentration change in electrolyte consider solvent consumption": 1.0,
+      "electrolyte consider solvent consumption": 1.0,
+      "EC diffusivity [m2.s-1]": 2e-18,
+      "EC partial molar volume [m3.mol-1]": 6.667e-05,
+      "Separator porosity": 0.47
+    }
+  },
+  "mesh_points": {
+    "x_n": 5,
+    "x_s": 3,
+    "x_p": 5,
+    "r_n": 10,
+    "r_p": 10
+  },
+  "solver": {
+    "name": "CasadiSolver",
+    "rtol": 1e-06,
+    "atol": 1e-06,
+    "root_method": "casadi",
+    "root_tol": 1e-06,
+    "options": {
+      "print_stats": false,
+      "jacobian": "sparse",
+      "linear_solver": "SUNLinSol_KLU",
+      "preconditioner": "BBDP",
+      "linsol_max_iterations": 5,
+      "precon_half_bandwidth": 5,
+      "precon_half_bandwidth_keep": 5
+    }
+  },
+  "simulation": {
+    "period": "30 seconds"
+  },
+  "study": {
+    "equivalent_cycles": 78,
+    "rpt_interval_equivalent_cycles": 1.0,
+    "count_rpt_discharge_in_equivalent_cycles": false,
+    "include_initial_rpt": true,
+    "initial_rpt_type": "long",
+    "rpt_schedule": {
+      "odd": "long",
+      "even": "short"
+    },
+    "ageing_protocol": {
+      "steps": [
+        {
+          "name": "age_discharge",
+          "instruction": "Discharge at 1C until 2.5 V"
+        },
+        {
+          "name": "age_charge",
+          "instruction": "Charge at 0.3C until 4.2 V"
+        },
+        {
+          "name": "age_cv",
+          "instruction": "Hold at 4.2 V until C/100"
+        }
+      ]
+    },
+    "rpt_protocols": {
+      "short": {
+        "steps": [
+          {
+            "name": "rpt_rest_stub_1",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_rest_stub_2",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_rest_1h_pre",
+            "instruction": "Rest for 1 hour"
+          },
+          {
+            "name": "rpt_rest_10s_pre_0p1c",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_0p1c_discharge",
+            "instruction": "Discharge at 0.1C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p1c",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p1c_charge",
+            "instruction": "Charge at 0.1C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p1c_cv",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_rest_1h_after_0p1c_charge",
+            "instruction": "Rest for 1 hour"
+          },
+          {
+            "name": "rpt_0p5c_discharge",
+            "instruction": "Discharge at 0.5C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p5c_1",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p5c_charge_1",
+            "instruction": "Charge at 0.5C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p5c_cv_1",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_0p5c_discharge_2",
+            "instruction": "Discharge at 0.5C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p5c_2",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p5c_charge_2",
+            "instruction": "Charge at 0.5C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p5c_cv_2",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_rest_3h_end",
+            "instruction": "Rest for 3 hours"
+          }
+        ]
+      },
+      "long": {
+        "steps": [
+          {
+            "name": "rpt_rest_stub_1",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_rest_stub_2",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_rest_1h_pre",
+            "instruction": "Rest for 1 hour"
+          },
+          {
+            "name": "rpt_rest_10s_pre_0p1c",
+            "instruction": "Rest for 10 seconds"
+          },
+          {
+            "name": "rpt_0p1c_discharge",
+            "instruction": "Discharge at 0.1C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p1c",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p1c_charge",
+            "instruction": "Charge at 0.1C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p1c_cv",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_rest_1h_after_0p1c_charge",
+            "instruction": "Rest for 1 hour"
+          },
+          {
+            "name": "rpt_0p5c_discharge",
+            "instruction": "Discharge at 0.5C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p5c_1",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p5c_charge_1",
+            "instruction": "Charge at 0.5C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p5c_cv_1",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_0p5c_discharge_2",
+            "instruction": "Discharge at 0.5C until 2.5 V"
+          },
+          {
+            "name": "rpt_rest_3h_after_0p5c_2",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "rpt_0p5c_charge_2",
+            "instruction": "Charge at 0.5C until 4.2 V"
+          },
+          {
+            "name": "rpt_0p5c_cv_2",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "rpt_rest_3h_end",
+            "instruction": "Rest for 3 hours"
+          },
+          {
+            "name": "gitt",
+            "repeat": 24,
+            "steps": [
+              {
+                "name": "rest_5min",
+                "instruction": "Rest for 5 minutes (1 minute period)"
+              },
+              {
+                "name": "rest_1p2s",
+                "instruction": "Rest for 1.2 seconds (0.1 second period)"
+              },
+              {
+                "name": "pulse_discharge",
+                "instruction": "Discharge at C/2 for 4.8 minutes or until 2.5 V (0.1 second period)"
+              },
+              {
+                "name": "rest_1h",
+                "instruction": "Rest for 1 hour"
+              }
+            ]
+          },
+          {
+            "name": "refill_charge",
+            "instruction": "Charge at 0.3C until 4.2 V"
+          },
+          {
+            "name": "refill_cv",
+            "instruction": "Hold at 4.2 V until C/100"
+          },
+          {
+            "name": "refill_rest_1h",
+            "instruction": "Rest for 1 hour"
+          }
+        ]
+      }
+    }
+  },
+  "analysis": {
+    "capacity_step_name": "rpt_0p1c_discharge",
+    "resistance_step_name": "rpt_0p5c_discharge",
+    "nominal_capacity_ah": 5.0
+  },
+  "output_variables": [
+    "Time [h]",
+    "Current [A]",
+    "Terminal voltage [V]",
+    "Discharge capacity [A.h]",
+    "Throughput capacity [A.h]",
+    "Loss of capacity to SEI [A.h]",
+    "Loss of capacity to SEI on cracks [A.h]",
+    "Loss of capacity to lithium plating [A.h]",
+    "Negative electrode capacity [A.h]",
+    "Positive electrode capacity [A.h]",
+    "Total lithium capacity in particles [A.h]",
+    "X-averaged negative electrode porosity"
+  ]
+}
