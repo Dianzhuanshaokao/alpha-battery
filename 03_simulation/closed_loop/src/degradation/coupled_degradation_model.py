@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import subprocess
 import sys
@@ -25,21 +26,34 @@ MODEL_ROOT = REPO_ROOT / "02_pybamm_model" / "closed_loop_model"
 RESULTS_ROOT = PROJECT_ROOT / "results"
 
 
+def load_parameter_values_helper(parameter_set: str) -> pybamm.ParameterValues:
+    try:
+        return pybamm.ParameterValues(parameter_set)
+    except Exception:
+        module_name = f"pybamm.input.parameters.lithium_ion.{parameter_set}"
+        module = importlib.import_module(module_name)
+        return pybamm.ParameterValues(module.get_parameter_values())
+
+
 def _default_model_options() -> Dict[str, Any]:
     return {
-        "thermal": "lumped",
-        "SEI": "solvent-diffusion limited",
-        "SEI porosity change": "true",
+        "SEI": "interstitial-diffusion limited",
+        "SEI on cracks": "true",
         "lithium plating": "partially reversible",
         "lithium plating porosity change": "true",
         "particle mechanics": ("swelling and cracking", "swelling only"),
-        "SEI on cracks": "true",
         "loss of active material": "stress-driven",
+        "contact resistance": "true",
+        "open-circuit potential": "current sigmoid",
+        "SEI film resistance": "distributed",
+        "SEI porosity change": "true",
+        "thermal": "isothermal"
     }
 
 
 def _default_var_pts() -> Dict[str, int]:
-    return {"x_n": 5, "x_s": 5, "x_p": 5, "r_n": 30, "r_p": 30}
+    return {"x_n": 5, "x_s": 3, "x_p": 5, "r_n": 10, "r_p": 10}
+
 
 
 def _default_ageing_steps() -> List[str]:
@@ -101,7 +115,7 @@ def _default_extractors() -> Dict[str, Any]:
 
 @dataclass
 class DegradationModelConfig:
-    parameter_set: str = "OKane2022"
+    parameter_set: str = "OKane2023"
     ambient_temperature_c: float = 25.0
     initial_soc: float = 1.0
     solver_preference: str = "casadi"
@@ -112,6 +126,7 @@ class DegradationModelConfig:
     return_solution_if_failed_early: bool = False
     model_options: Dict[str, Any] = field(default_factory=_default_model_options)
     var_pts: Dict[str, int] = field(default_factory=_default_var_pts)
+
 
 
 @dataclass
@@ -137,6 +152,20 @@ def load_cycle_protocol_records(path: Path | None) -> pd.DataFrame | None:
 
 def select_solver(model_config: DegradationModelConfig) -> pybamm.BaseSolver:
     preference = model_config.solver_preference
+    
+    if preference == "casadi_fast":
+        try:
+            return pybamm.CasadiSolver(
+                mode="fast",
+                rtol=model_config.solver_rtol,
+                atol=model_config.solver_atol,
+                dt_max=model_config.solver_dt_max,
+                max_step_decrease_count=model_config.solver_max_step_decrease_count,
+                return_solution_if_failed_early=model_config.return_solution_if_failed_early,
+            )
+        except Exception:
+            preference = "casadi"
+
     if preference == "casadi":
         return pybamm.CasadiSolver(
             mode="safe",
@@ -146,25 +175,33 @@ def select_solver(model_config: DegradationModelConfig) -> pybamm.BaseSolver:
             max_step_decrease_count=model_config.solver_max_step_decrease_count,
             return_solution_if_failed_early=model_config.return_solution_if_failed_early,
         )
+
+    # If idaklu was requested explicitly, attempt to load it, falling back to casadi safe if unavailable
     if preference == "idaklu":
-        return pybamm.IDAKLUSolver(
-            rtol=model_config.solver_rtol,
-            atol=model_config.solver_atol,
-        )
-    try:
-        return pybamm.IDAKLUSolver(
-            rtol=model_config.solver_rtol,
-            atol=model_config.solver_atol,
-        )
-    except Exception:
-        return pybamm.CasadiSolver(
-            mode="safe",
-            rtol=model_config.solver_rtol,
-            atol=model_config.solver_atol,
-            dt_max=model_config.solver_dt_max,
-            max_step_decrease_count=model_config.solver_max_step_decrease_count,
-            return_solution_if_failed_early=model_config.return_solution_if_failed_early,
-        )
+        try:
+            return pybamm.IDAKLUSolver(
+                rtol=model_config.solver_rtol,
+                atol=model_config.solver_atol,
+            )
+        except Exception:
+            return pybamm.CasadiSolver(
+                mode="safe",
+                rtol=model_config.solver_rtol,
+                atol=model_config.solver_atol,
+                dt_max=model_config.solver_dt_max,
+                max_step_decrease_count=model_config.solver_max_step_decrease_count,
+                return_solution_if_failed_early=model_config.return_solution_if_failed_early,
+            )
+
+    # Default fallback
+    return pybamm.CasadiSolver(
+        mode="safe",
+        rtol=model_config.solver_rtol,
+        atol=model_config.solver_atol,
+        dt_max=model_config.solver_dt_max,
+        max_step_decrease_count=model_config.solver_max_step_decrease_count,
+        return_solution_if_failed_early=model_config.return_solution_if_failed_early,
+    )
 
 
 def safe_parameter_update(parameter_values: pybamm.ParameterValues, updates: Dict[str, Any]) -> None:
@@ -270,7 +307,7 @@ class CoupledDegradationSimulator:
     def __init__(self, model_config: DegradationModelConfig, protocol: ProtocolConfig):
         self.model_config = model_config
         self.protocol = protocol
-        self.base_parameter_values = pybamm.ParameterValues(model_config.parameter_set)
+        self.base_parameter_values = load_parameter_values_helper(model_config.parameter_set)
         self.base_porosity = {
             "Negative electrode porosity": self.base_parameter_values["Negative electrode porosity"],
             "Separator porosity": self.base_parameter_values["Separator porosity"],

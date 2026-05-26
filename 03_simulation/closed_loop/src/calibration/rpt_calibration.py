@@ -368,8 +368,12 @@ class RPTCalibrator:
                 x_sims.append(sim_feat)
                 valid_thetas.append(theta_np)
             except Exception as e:
-                print(f"[SBI Sim Warning] Simulation {i} failed: {e}")
+                print(f"[SBI Sim Warning] Simulation {i} failed: {e}", flush=True)
                 continue
+            
+            if (i + 1) % 5 == 0 or (i + 1) == n_simulations:
+                print(f"Progress: {i + 1}/{n_simulations} simulations completed. (Valid: {len(x_sims)}, Failed: {i + 1 - len(x_sims)})", flush=True)
+
 
         if not x_sims:
             raise RuntimeError("All SBI simulations failed.")
